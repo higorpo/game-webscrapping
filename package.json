@@ -9,6 +9,7 @@
     "prettier": "prettier --config .prettierrc --write ."
   },
   "dependencies": {
+    "puppeteer": "^19.11.1",
     "typescript": "*"
   },
   "devDependencies": {
