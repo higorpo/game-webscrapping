@@ -41,7 +41,9 @@ export class SlotCatalogContents implements FindContents {
 
     await page.close();
 
-    return allContents;
+    return allContents.map((content) => ({
+      link: 'https://slotcatalog.com' + content.link,
+    }));
   }
 
   private async extractContents(page: Page): Promise<ContentsToFetch[]> {
