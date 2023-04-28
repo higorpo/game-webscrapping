@@ -2,7 +2,7 @@
   "type": "module",
   "scripts": {
     "start": "node build/index.js",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node-esm' src/index.ts",
+    "dev": "ts-node-esm src/index.ts",
     "clean": "rimraf build tmp",
     "build": "tsc -p tsconfig.json",
     "lint": "eslint . --ext .ts --ext .mts",
