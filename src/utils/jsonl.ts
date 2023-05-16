@@ -5,6 +5,6 @@ const stream = through.obj();
 
 stream
   .pipe(jsonl({ toBufferStream: true }))
-  .pipe(fs.createWriteStream('./dataset.json'));
+  .pipe(fs.createWriteStream('./dataset.jsonl'));
 
 export { stream };
