@@ -4,7 +4,7 @@ import { type FindContents } from './contracts/FindContents.js';
 import { waitForSelectorAndInternet } from './utils/internetErrorsHandler.js';
 
 export class SlotCatalogContents implements FindContents {
-  private readonly MAX_PAGES_TO_VISIT = 35;
+  private readonly MAX_PAGES_TO_VISIT = 3;
 
   private readonly SITE_URL = 'https://slotcatalog.com/pt/The-Best-Slots?typ=2';
 
@@ -13,6 +13,8 @@ export class SlotCatalogContents implements FindContents {
   }
 
   async find(): Promise<ContentsToFetch[]> {
+    console.log('Iniciando processo de busca de conteúdos...');
+
     const page = await this.browser.newPage();
 
     await page.goto(this.SITE_URL);
@@ -21,6 +23,7 @@ export class SlotCatalogContents implements FindContents {
     const allContents: ContentsToFetch[] = [];
 
     while (currentPage < this.MAX_PAGES_TO_VISIT) {
+      console.log('Buscando conteúdos da página ', currentPage);
       await waitForSelectorAndInternet(
         page,
         '.providerCardOut > .providerCard',
@@ -33,6 +36,10 @@ export class SlotCatalogContents implements FindContents {
       await page.screenshot({ path: `tmp/selecting-${currentPage}.png` });
 
       const pageContents = await this.extractContents(page);
+      console.log(
+        `Conteúdos encontrados na página ${currentPage}: ${pageContents.length}`,
+      );
+
       allContents.push(...pageContents);
 
       currentPage += 1;

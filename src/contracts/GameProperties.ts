@@ -1,11 +1,10 @@
 export interface GameProperties {
-  imageUrl: string;
-  provider: string;
+  link: string;
+  imageUrl: string | undefined;
+  provider: string | undefined;
 
   // Slot Catalog data
-  slot_rank: number;
-  release_date: string;
-  game_technology: string;
-  game_size: string;
-  genre: string;
+  releaseDate: string | undefined;
+  gameTechnology: string | undefined;
+  gameSize: string | undefined;
 }

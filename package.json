@@ -9,7 +9,9 @@
     "prettier": "prettier --config .prettierrc --write ."
   },
   "dependencies": {
+    "jsonl": "^1.1.2",
     "puppeteer": "^19.11.1",
+    "through2": "^4.0.2",
     "typescript": "*"
   },
   "devDependencies": {

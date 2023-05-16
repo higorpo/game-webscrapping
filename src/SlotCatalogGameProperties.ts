@@ -8,22 +8,41 @@ export class SlotCatalogGameProperties implements FindGameProperties {
   }
 
   async find(pageUrl: string): Promise<GameProperties> {
+    console.log(
+      'Iniciando processo de busca de propriedades do jogo... URL: ',
+      pageUrl,
+    );
     const page = await this.browser.newPage();
 
     await page.goto(pageUrl);
 
     const gameLogoUrl = await this.extractGameLogo(page);
     const gameProvider = await this.extractGameProvider(page);
+    const gameReleaseDate = await this.extractGameReleaseDate(page);
+    const gameTechnology = await this.extractGameTechnology(page);
+    const gameSize = await this.extractGameSize(page);
+
+    await page.close();
+
+    return {
+      link: pageUrl,
+      imageUrl: gameLogoUrl,
+      provider: gameProvider,
+      releaseDate: gameReleaseDate,
+      gameTechnology,
+      gameSize,
+    };
   }
 
   private async extractGameLogo(page: Page): Promise<string | undefined> {
     await page.waitForSelector('.gemeLogoImg');
 
-    return await page.evaluate(
-      () =>
-        document.querySelector('.gemeLogoImg > a > img')?.getAttribute('src') ??
-        undefined,
-    );
+    return await page.evaluate(() => {
+      const value = document
+        .querySelector('.gemeLogoImg > a > img')
+        ?.getAttribute('src');
+      return value ?? undefined;
+    });
   }
 
   private async extractGameProvider(page: Page): Promise<string | undefined> {
@@ -50,13 +69,13 @@ export class SlotCatalogGameProperties implements FindGameProperties {
   ): Promise<string | undefined> {
     await page.waitForSelector('.slotAttrTop');
 
-    return await page.evaluate(() => {
+    return await page.evaluate((searchAttribute) => {
       return Array.from(document.querySelectorAll('.slotAttrReview tr'))
         .find(
           (element) =>
             element.querySelector('th')?.innerText === searchAttribute,
         )
         ?.querySelector('td')?.innerText;
-    });
+    }, searchAttribute);
   }
 }
