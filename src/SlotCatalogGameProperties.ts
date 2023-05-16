@@ -1,6 +1,7 @@
 import { type Page, type Browser } from 'puppeteer';
 import { type FindGameProperties } from './contracts/FindGameProperties.js';
 import { type GameProperties } from './contracts/GameProperties.js';
+import { waitForSelectorAndInternet } from './utils/internetErrorsHandler.js';
 
 export class SlotCatalogGameProperties implements FindGameProperties {
   constructor(private readonly browser: Browser) {
@@ -14,7 +15,15 @@ export class SlotCatalogGameProperties implements FindGameProperties {
     );
     const page = await this.browser.newPage();
 
-    await page.goto(pageUrl);
+    try {
+      await page.goto(pageUrl);
+    } catch (e) {
+      console.log('Erro ao acessar a página: ', pageUrl);
+      await page.close();
+      return await this.find(pageUrl);
+    }
+
+    await waitForSelectorAndInternet(page, '.mainTitle');
 
     const gameLogoUrl = await this.extractGameLogo(page);
     const gameProvider = await this.extractGameProvider(page);
@@ -41,6 +50,7 @@ export class SlotCatalogGameProperties implements FindGameProperties {
       const value = document
         .querySelector('.gemeLogoImg > a > img')
         ?.getAttribute('src');
+      console.log(document.querySelector('.gemeLogoImg > a > img')); // for some reason it only works if I log this
       return value ?? undefined;
     });
   }

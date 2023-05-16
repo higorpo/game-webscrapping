@@ -17,7 +17,13 @@ export class SlotCatalogContents implements FindContents {
 
     const page = await this.browser.newPage();
 
-    await page.goto(this.SITE_URL);
+    try {
+      await page.goto(this.SITE_URL);
+    } catch (e) {
+      console.log('Erro ao acessar a página de conteúdos');
+      await page.close();
+      return await this.find();
+    }
 
     let currentPage = 1;
     const allContents: ContentsToFetch[] = [];
