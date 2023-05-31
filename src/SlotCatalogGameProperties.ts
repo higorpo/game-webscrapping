@@ -17,6 +17,10 @@ export class SlotCatalogGameProperties implements FindGameProperties {
     );
     const page = await this.browser.newPage();
 
+    await page.setUserAgent(
+      'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 Edg/108.0.1462.54',
+    );
+
     try {
       await page.goto(pageUrl);
     } catch (e) {

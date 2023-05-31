@@ -8,7 +8,7 @@ import { stream } from './utils/jsonl.js';
 console.log('Iniciando processo de scrapping...');
 
 const browser = await puppeteer.launch({
-  headless: false,
+  headless: true,
 });
 
 const slotCatalogContents = new SlotCatalogContents(browser);
