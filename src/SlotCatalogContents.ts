@@ -4,7 +4,7 @@ import { type FindContents } from './contracts/FindContents.js';
 import { waitForSelectorAndInternet } from './utils/internetErrorsHandler.js';
 
 export class SlotCatalogContents implements FindContents {
-  private readonly MAX_PAGES_TO_VISIT = 36;
+  private readonly MAX_PAGES_TO_VISIT = 38;
 
   private readonly SITE_URL = 'https://slotcatalog.com/pt/The-Best-Slots?typ=2';
 

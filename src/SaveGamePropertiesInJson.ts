@@ -3,7 +3,7 @@ import { type SaveGameProperties } from './contracts/SaveGameProperties.js';
 import { stream } from './utils/jsonl.js';
 
 export class SaveGamePropertiesInJson implements SaveGameProperties {
-  save(gameProperties: GameProperties): void {
+  save(gameProperties: GameProperties | Pick<GameProperties, 'link'>): void {
     console.log('Salvando propriedades do jogo... URL: ', gameProperties.link);
     stream.push(gameProperties);
   }

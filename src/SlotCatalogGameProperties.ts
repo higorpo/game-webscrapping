@@ -8,7 +8,9 @@ export class SlotCatalogGameProperties implements FindGameProperties {
     //
   }
 
-  async find(pageUrl: string): Promise<GameProperties> {
+  async find(
+    pageUrl: string,
+  ): Promise<GameProperties | Pick<GameProperties, 'link'>> {
     console.log(
       'Iniciando processo de busca de propriedades do jogo... URL: ',
       pageUrl,
@@ -23,36 +25,32 @@ export class SlotCatalogGameProperties implements FindGameProperties {
       return await this.find(pageUrl);
     }
 
-    await waitForSelectorAndInternet(page, '.mainTitle');
+    try {
+      await waitForSelectorAndInternet(page, '.mainTitle');
+    } catch (error) {
+      console.log('Erro ao acessar a página: ', pageUrl);
+      await page.close();
+      return {
+        link: pageUrl,
+      };
+    }
 
-    const gameLogoUrl = await this.extractGameLogo(page);
     const gameProvider = await this.extractGameProvider(page);
     const gameReleaseDate = await this.extractGameReleaseDate(page);
     const gameTechnology = await this.extractGameTechnology(page);
     const gameSize = await this.extractGameSize(page);
+    const gameLastUpdate = await this.extractLastUpdate(page);
 
     await page.close();
 
     return {
       link: pageUrl,
-      imageUrl: gameLogoUrl,
       provider: gameProvider,
       releaseDate: gameReleaseDate,
       gameTechnology,
       gameSize,
+      gameLastUpdate,
     };
-  }
-
-  private async extractGameLogo(page: Page): Promise<string | undefined> {
-    await page.waitForSelector('.gemeLogoImg');
-
-    return await page.evaluate(() => {
-      const value = document
-        .querySelector('.gemeLogoImg > a > img')
-        ?.getAttribute('src');
-      console.log(document.querySelector('.gemeLogoImg > a > img')); // for some reason it only works if I log this
-      return value ?? undefined;
-    });
   }
 
   private async extractGameProvider(page: Page): Promise<string | undefined> {
@@ -71,6 +69,10 @@ export class SlotCatalogGameProperties implements FindGameProperties {
 
   private async extractGameSize(page: Page): Promise<string | undefined> {
     return await this.extractAttributeReview(page, 'Tamanho do jogo:');
+  }
+
+  private async extractLastUpdate(page: Page): Promise<string | undefined> {
+    return await this.extractAttributeReview(page, 'Última atualização:');
   }
 
   private async extractAttributeReview(

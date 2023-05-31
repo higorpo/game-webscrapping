@@ -14,6 +14,8 @@ const browser = await puppeteer.launch({
 const slotCatalogContents = new SlotCatalogContents(browser);
 const contents = await slotCatalogContents.find();
 
+console.log('Quantidade de conteúdos encontrados: ', contents.length);
+
 const chunks = chunk(contents, 50);
 
 for (const chunk of chunks) {
