@@ -7,4 +7,7 @@ export interface GameProperties {
   gameTechnology: string | undefined;
   gameSize: string | undefined;
   gameLastUpdate: string | undefined;
+  gameTitle: string | undefined;
+  gameVolatility: string | undefined;
+  gameMinMaxBet: string | undefined;
 }
